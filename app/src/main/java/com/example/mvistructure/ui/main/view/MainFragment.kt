@@ -2,9 +2,7 @@ package com.example.mvistructure.ui.main.view
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +34,7 @@ class MainFragment : Fragment(), BlogPostListAdapter.Interaction {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         viewModel = activity?.run {
             ViewModelProvider(this).get(MainViewModel::class.java)
@@ -43,7 +42,7 @@ class MainFragment : Fragment(), BlogPostListAdapter.Interaction {
 
         initRecyclerView()
         subscribeObservers()
-        viewModel.setStateEvent(MainStateEvent.getBlogPostEvent())
+      //  viewModel.setStateEvent(MainStateEvent.getBlogPostEvent())
     }
 
     override fun onAttach(context: Context) {
@@ -91,4 +90,22 @@ class MainFragment : Fragment(), BlogPostListAdapter.Interaction {
     override fun onItemSelected(position: Int, item: BlogPost) {
         println("DEBUG: CLICKED ${position}")
         println("DEBUG: CLICKED ${item}")    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_get_blogs-> triggerGetBlogsEvent()
+           // R.id.action_get_user-> triggerGetUserEvent()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun triggerGetBlogsEvent(){
+        viewModel.setStateEvent(MainStateEvent.getBlogPostEvent())
+    }
 }
